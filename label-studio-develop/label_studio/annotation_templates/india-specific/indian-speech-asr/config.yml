@@ -1,0 +1,103 @@
+title: Indian Speech ASR (Multi-Language)
+type: community
+group: India-Specific
+image: /static/templates/indian-speech-asr.png
+description: Speech recognition for Indian languages with accent and quality annotation
+details: |
+  <h1>Transcribe Indian speech with language and accent tagging</h1>
+  <p>Annotate audio segments with transcription in original script, language identification, and accent classification. Supports Hindi, Marathi, and Hinglish speech patterns commonly found in Indian audio datasets.</p>
+  <dl>
+    <dt>Supported Languages</dt>
+    <dd>Hindi (Devanagari script), Marathi (Devanagari script), Hinglish (mixed Hindi-English), English with Indian accent</dd>
+    <dt>Audio Types</dt>
+    <dd>phone calls, voice messages, interviews, speeches, conversations, dictation, voice commands, customer service calls</dd>
+    <dt>Accent Classification</dt>
+    <dd>Urban (metropolitan), Rural (village/town), Regional variations, Code-switching patterns</dd>
+    <dt>Use Cases</dt>
+    <dd>Indian ASR model training, accent recognition, multilingual speech datasets, voice assistant training, call center analytics</dd>
+    <dt>Associated Models</dt>
+    <dd>Whisper fine-tuned for Indic languages, wav2vec2-hindi, IndicWav2Vec, Google Speech API (hi-IN), Azure Speech (mr-IN)</dd>
+  </dl>
+config: |
+  <View>
+    <Header value="Indian Speech ASR Annotation"/>
+    
+    <!-- Audio player with waveform and controls -->
+    <Audio name="audio" value="$audio" zoom="true" speed="true" 
+           volume="true" hotkey="ctrl+enter" waveform="true"/>
+
+    <!-- Language identification for each segment -->
+    <Labels name="language" toName="audio" showInline="true">
+      <Label value="Hindi" background="#FF6B6B" hotkey="h"/>
+      <Label value="Marathi" background="#4ECDC4" hotkey="m"/>
+      <Label value="Hinglish" background="#45B7D1" hotkey="g"/>
+      <Label value="English" background="#96CEB4" hotkey="e"/>
+      <Label value="Mixed" background="#FFEAA7" hotkey="x"/>
+    </Labels>
+
+    <!-- Accent classification -->
+    <Choices name="accent" toName="audio" showInline="true">
+      <Choice value="Urban" hotkey="u"/>
+      <Choice value="Rural" hotkey="r"/>
+      <Choice value="Regional" hotkey="l"/>
+      <Choice value="Neutral" hotkey="n"/>
+    </Choices>
+
+    <!-- Speaker demographics (optional) -->
+    <Choices name="speaker_info" toName="audio" showInline="false">
+      <Choice value="Male"/>
+      <Choice value="Female"/>
+      <Choice value="Child"/>
+      <Choice value="Elderly"/>
+      <Choice value="Multiple Speakers"/>
+    </Choices>
+
+    <!-- Main transcription area - supports segments -->
+    <TextArea name="transcription" toName="audio"
+              perRegion="true"
+              required="true"
+              maxSubmissions="1"
+              rows="4"
+              placeholder="Enter transcription in original script (Hindi: हिंदी, Marathi: मराठी, English: English)"
+              displayMode="region-list"
+              showSubmitButton="false"/>
+
+    <!-- Audio quality assessment -->
+    <Rating name="audio_quality" toName="audio" 
+            maxRating="5" 
+            perRegion="true"
+            hotkey="q"
+            size="medium"/>
+
+    <!-- Speech characteristics -->
+    <Choices name="speech_quality" toName="audio" 
+             perRegion="true" 
+             showInline="false">
+      <Choice value="Clear"/>
+      <Choice value="Noisy"/>
+      <Choice value="Fast Speech"/>
+      <Choice value="Slow Speech"/>
+      <Choice value="Mumbled"/>
+      <Choice value="Background Music"/>
+      <Choice value="Multiple Speakers"/>
+      <Choice value="Phone Quality"/>
+    </Choices>
+
+    <!-- Code-switching annotation (for Hinglish) -->
+    <Choices name="code_switching" toName="audio" 
+             perRegion="true" 
+             showInline="false">
+      <Choice value="None"/>
+      <Choice value="Word Level"/>
+      <Choice value="Phrase Level"/>
+      <Choice value="Sentence Level"/>
+      <Choice value="Frequent Switching"/>
+    </Choices>
+
+    <!-- Confidence level for transcription -->
+    <Rating name="transcription_confidence" toName="audio" 
+            maxRating="3" 
+            perRegion="true"
+            size="small"/>
+
+  </View>

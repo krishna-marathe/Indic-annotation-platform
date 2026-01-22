@@ -1,0 +1,78 @@
+title: India-Specific OCR (Multi-Script)
+type: community
+group: India-Specific
+image: /static/templates/indic-ocr.png
+description: OCR annotation for Indian documents supporting Devanagari and English scripts
+details: |
+  <h1>Annotate Indian documents with multi-script text recognition</h1>
+  <p>Draw bounding boxes around text regions and transcribe content in original script. Supports Devanagari (Hindi/Marathi) and English text commonly found in Indian documents.</p>
+  <dl>
+    <dt>Document Types</dt>
+    <dd>bills, invoices, government forms, handwritten notes, receipts, certificates, identity documents</dd>
+    <dt>Supported Scripts</dt>
+    <dd>Devanagari (Hindi/Marathi), English, Mixed script documents</dd>
+    <dt>Use Cases</dt>
+    <dd>digitization of Indian documents, multilingual OCR training, government document processing, financial document automation</dd>
+    <dt>Associated Models</dt>
+    <dd>Tesseract with Indic language packs, PaddleOCR, EasyOCR, TrOCR fine-tuned for Indic scripts</dd>
+  </dl>
+config: |
+  <View>
+    <Header value="India-Specific OCR Annotation"/>
+    
+    <!-- Image display with zoom and pan controls -->
+    <Image name="image" value="$image" zoom="true" zoomBy="1.5" 
+           zoomControl="true" rotateControl="true"/>
+
+    <!-- Script/Language classification for each region -->
+    <Labels name="script" toName="image" showInline="true">
+      <Label value="Devanagari" background="#FF6B6B" hotkey="d"/>
+      <Label value="English" background="#4ECDC4" hotkey="e"/>
+      <Label value="Mixed" background="#45B7D1" hotkey="m"/>
+      <Label value="Numeric" background="#96CEB4" hotkey="n"/>
+      <Label value="Signature" background="#FFEAA7" hotkey="s"/>
+    </Labels>
+
+    <!-- Document type classification (optional, for context) -->
+    <Choices name="document_type" toName="image" showInline="false">
+      <Choice value="Bill/Invoice"/>
+      <Choice value="Government Form"/>
+      <Choice value="Handwritten Note"/>
+      <Choice value="Receipt"/>
+      <Choice value="Certificate"/>
+      <Choice value="Identity Document"/>
+      <Choice value="Other"/>
+    </Choices>
+
+    <!-- Bounding box tool for text regions -->
+    <Rectangle name="bbox" toName="image" strokeWidth="2" 
+               smart="true" showInline="true"/>
+
+    <!-- Text transcription for each bounding box -->
+    <TextArea name="transcription" toName="image,bbox"
+              perRegion="true"
+              required="true"
+              maxSubmissions="1"
+              rows="3"
+              placeholder="Enter text exactly as shown (preserve original script)"
+              displayMode="region-list"
+              showSubmitButton="false"/>
+
+    <!-- Quality indicators -->
+    <Rating name="text_quality" toName="image,bbox" 
+            maxRating="5" 
+            perRegion="true"
+            hotkey="q"/>
+
+    <!-- Additional metadata for difficult cases -->
+    <Choices name="difficulty" toName="image,bbox" 
+             perRegion="true" 
+             showInline="false">
+      <Choice value="Clear"/>
+      <Choice value="Blurry"/>
+      <Choice value="Handwritten"/>
+      <Choice value="Faded"/>
+      <Choice value="Partially Visible"/>
+    </Choices>
+
+  </View>
